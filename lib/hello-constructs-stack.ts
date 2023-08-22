@@ -1,16 +1,28 @@
-import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { Stack, StackProps } from 'aws-cdk-lib';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as api from 'aws-cdk-lib/aws-apigateway';
+import { ApiGatewayToLambda, ApiGatewayToLambdaProps } from '@aws-solutions-constructs/aws-apigateway-lambda';
 
-export class HelloConstructsStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+export class HelloConstructsStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     // The code that defines your stack goes here
+    const api_lambda_props: ApiGatewayToLambdaProps = {
+      lambdaFunctionProps: {
+        code: lambda.Code.fromAsset('lambda'),
+        runtime: lambda.Runtime.NODEJS_14_X,
+        handler: 'hello.handler'
+      },
+      apiGatewayProps: {
+        defaultMethodOptions: {
+          authorizationType: api.AuthorizationType.NONE
+        }
+      }
+    };
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'HelloConstructsQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    new ApiGatewayToLambda(this, 'ApiGatewayToLambda', api_lambda_props);
   }
 }
+
