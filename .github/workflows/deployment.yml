@@ -29,10 +29,10 @@ jobs:
           working-directory: ./cdk/
 
       - name: Synth stack
-        run: cd cdk && cdk synth
+        run: cd cdk && yarn cdk synth
 
       - id: deploy-stack
         name: Deploy stack
-        run: cd cdk && REGION=eu-central-1 DEPLOYMENT_ENV=815510839581 cdk deploy HelloConstructsStack-dev
+        run: cd cdk && REGION=eu-central-1 DEPLOYMENT_ENV=815510839581 yarn cdk deploy HelloConstructsStack-dev
   
       
