@@ -12,7 +12,7 @@ export class HelloConstructsStack extends Stack {
     // The code that defines your stack goes here
     const api_lambda_props: ApiGatewayToLambdaProps = {
       lambdaFunctionProps: {
-        code: lambda.Code.fromAsset(path.join(__dirname, '../lambda')),
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../../HELLO-CONSTRUCTS/cdk/lambda')),
         runtime: lambda.Runtime.NODEJS_14_X,
         handler: 'hello.handler'
       },
