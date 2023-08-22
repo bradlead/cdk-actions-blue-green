@@ -33,6 +33,6 @@ jobs:
 
       - id: deploy-stack
         name: Deploy stack
-        run: cd cdk && REGION=eu-central-1 DEPLOYMENT_ENV=815510839581 yarn cdk deploy HelloConstructsStack-dev
+        run: cd cdk && REGION=eu-central-1 DEPLOYMENT_ENV=815510839581 yarn cdk deploy HelloConstructsStack-dev --require-approval never
   
       
