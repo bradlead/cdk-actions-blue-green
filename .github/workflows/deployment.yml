@@ -24,13 +24,15 @@ jobs:
         run: aws sts get-caller-identity
 
       - name: Install dependencies
-        run: npm install
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: .cdk/
 
       - name: Synth stack
-        run: cdk synth
+        run: cd cdk && cdk synth
 
       - id: deploy-stack
         name: Deploy stack
-        run: REGION=eu-central-1 DEPLOYMENT_ENV=815510839581 cdk deploy HelloConstructsStack-dev
+        run: cd cdk && REGION=eu-central-1 DEPLOYMENT_ENV=815510839581 cdk deploy HelloConstructsStack-dev
   
       
