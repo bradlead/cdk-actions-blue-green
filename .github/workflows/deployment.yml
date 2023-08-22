@@ -1,0 +1,36 @@
+name: Blue/Green deployment workflow
+on: [push]
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
+jobs:
+  deploy_dev_stack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: 'arn:aws:iam::815510839581:role/github-actions-deployment-role'
+          aws-region: 'eu-central-1'
+
+      - name: Check credentials
+        run: aws sts get-caller-identity
+
+      - name: Install dependencies
+        run: cd cdk && npm install
+
+      - name: Synth stack
+        run: cd cdk && cdk synth
+
+      - id: deploy-stack
+        name: Deploy stack
+        run: cd cdk && REGION=eu-central-1 DEPLOYMENT_ENV=815510839581 cdk deploy HelloConstructsStack-dev
+  
+      
