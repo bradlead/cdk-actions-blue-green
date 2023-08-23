@@ -5,7 +5,13 @@ import { HelloConstructsStack } from '../lib/hello-constructs-stack';
 
 const app = new cdk.App();
 
-
+new HelloConstructsStack(app, 'HelloConstructsStack', {
+  env: {
+    account: process.env.ACCOUNT,
+    region: process.env.REGION
+  }
+});
+/*
 new HelloConstructsStack(app, 'HelloConstructsStack-dev', {
   env: {
     account: process.env.DEV_ACCOUNT,
@@ -32,4 +38,4 @@ new HelloConstructsStack(app, 'HelloConstructsStack-green', {
     account: process.env.PROD_ACCOUNT,
     region: process.env.PROD_REGION
    }
-});
+});*/
