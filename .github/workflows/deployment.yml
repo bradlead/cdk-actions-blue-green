@@ -92,7 +92,13 @@ jobs:
           working-directory: ./cdk/
 
       - name: Run cdk diff
-        run: cd cdk && cdk diff HelloConstructsStack --no-color &> diff.txt
+        run: cd cdk && cdk diff --no-color &> diff.txt
+
+      - name: Archive cdk diff results
+        uses: actions/upload-artifact@v3
+        with:
+          name: cdk-diff-report
+          path: cdk/diff.txt
 
   deploy_prod_stack:
     environment:
