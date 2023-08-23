@@ -7,6 +7,7 @@ jobs:
   deploy_dev_stack:
     environment: 
       name: test
+      url: ${{ steps.set_outputs.outputs.DEV_URL }}
     runs-on: ubuntu-latest
     outputs:
       DEV_URL: ${{ steps.set_outputs.outputs.DEV_URL }}
