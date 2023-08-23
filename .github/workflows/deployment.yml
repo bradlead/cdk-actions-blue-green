@@ -50,7 +50,7 @@ jobs:
   deploy_prod_stack:
     environment:
       name: production
-      url: ${{ steps.set_outputs.outputs.DEV_URL }}
+      url: https://bbc.co.uk
     needs: deploy_dev_stack
     runs-on: ubuntu-latest
     steps:
