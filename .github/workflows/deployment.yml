@@ -70,7 +70,7 @@ jobs:
           echo "$values" >> "${GITHUB_OUTPUT}"
           echo "EOF" >> "${GITHUB_OUTPUT}"
 
-diff_prod_stack_check:
+  diff_prod_stack_check:
     needs: deploy_test_stack
     runs-on: ubuntu-latest    
     steps:
