@@ -43,7 +43,8 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: 'arn:aws:iam::815510839581:role/github-actions-deployment-role'
+          test_account: ${{ secrets.TEST_ACCOUNT }}
+          role-to-assume: 'arn:aws:iam::${{ secrets.TEST_ACCOUNT }}:role/github-actions-deployment-role'
           aws-region: 'eu-central-1'
 
       - name: Check credentials
@@ -59,7 +60,7 @@ jobs:
 
       - id: deploy-stack
         name: Deploy stack
-        run: cd cdk && TEST_REGION=eu-central-1 TEST_ACCOUNT=815510839581 yarn cdk deploy HelloConstructsStack-test --outputs-file ./cdk-outputs.json --require-approval never
+        run: cd cdk && REGION=eu-central-1 ACCOUNT=815510839581 yarn cdk deploy --outputs-file ./cdk-outputs.json --require-approval never
   
       - name: Edit json
         id: set_outputs
@@ -69,11 +70,36 @@ jobs:
           echo "$values" >> "${GITHUB_OUTPUT}"
           echo "EOF" >> "${GITHUB_OUTPUT}"
 
+diff_prod_stack_check:
+    needs: deploy_test_stack
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: 'arn:aws:iam::580240676696:role/GitHubActionsDeploymentRole'
+          aws-region: 'eu-central-1'
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: ./cdk/
+
+      - name: Run cdk diff
+        run: cd cdk && cdk diff HelloConstructsStack --no-color &> diff.txt
+
   deploy_prod_stack:
     environment:
       name: production
       url: ${{ steps.set_outputs.outputs.PROD_URL }}
-    needs: deploy_test_stack
+    needs: diff_prod_stack_check
     runs-on: ubuntu-latest    
     outputs:
       PROD_URL: ${{ steps.set_outputs.outputs.PROD_URL }}
@@ -104,7 +130,7 @@ jobs:
 
       - id: deploy-stack
         name: Deploy stack
-        run: cd cdk && BLUE_REGION=eu-central-1 BLUE_ACCOUNT=580240676696 yarn cdk deploy HelloConstructsStack-blue --outputs-file ./cdk-outputs.json --require-approval never
+        run: cd cdk && REGION=eu-central-1 ACCOUNT=580240676696 yarn cdk deploy --outputs-file ./cdk-outputs.json --require-approval never
       
       - name: Edit json
         id: set_outputs
