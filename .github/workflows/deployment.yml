@@ -97,8 +97,8 @@ jobs:
       - name: Archive cdk diff results
         uses: actions/upload-artifact@v3
         with:
-          name: cdk-diff-report
-          path: cdk/diff.txt
+          name: diff.txt
+          path: cdk/diff
 
   deploy_prod_stack:
     environment:
