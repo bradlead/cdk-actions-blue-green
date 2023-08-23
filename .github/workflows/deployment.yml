@@ -92,7 +92,7 @@ jobs:
           working-directory: ./cdk/
 
       - name: Run cdk diff
-        run: cd cdk && cdk diff &> diff
+        run: cd cdk && yarn cdk diff &> diff
 
       - name: Archive cdk diff results
         uses: actions/upload-artifact@v3
