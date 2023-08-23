@@ -4,7 +4,28 @@ permissions:
   id-token: write   # This is required for requesting the JWT
   contents: read    # This is required for actions/checkout
 jobs:
+  run_tests:
+    environment: 
+      name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: ./cdk/
+      
+      - name: run tests
+        run: cd cdk && npm run test
+
   deploy_test_stack:
+    needs: run_tests
     environment: 
       name: test
       url: ${{ steps.set_outputs.outputs.TEST_URL }}
