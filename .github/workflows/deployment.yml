@@ -9,7 +9,7 @@ jobs:
       name: test
     runs-on: ubuntu-latest
     outputs:
-      DEV_URL: ${{ steps.set_outputs.outputs.set_outputs }}
+      DEV_URL: ${{ steps.set_outputs.outputs.DEV_URL }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -50,7 +50,7 @@ jobs:
   deploy_prod_stack:
     environment:
       name: production
-      url: ${{ steps.set_outputs.outputs.set_outputs }}
+      url: ${{ steps.set_outputs.outputs.DEV_URL }}
     needs: deploy_dev_stack
     runs-on: ubuntu-latest
     steps:
