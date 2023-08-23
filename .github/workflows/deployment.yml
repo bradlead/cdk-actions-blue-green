@@ -4,13 +4,13 @@ permissions:
   id-token: write   # This is required for requesting the JWT
   contents: read    # This is required for actions/checkout
 jobs:
-  deploy_dev_stack:
+  deploy_test_stack:
     environment: 
       name: test
-      url: ${{ steps.set_outputs.outputs.DEV_URL }}
+      url: ${{ steps.set_outputs.outputs.TEST_URL }}
     runs-on: ubuntu-latest
     outputs:
-      DEV_URL: ${{ steps.set_outputs.outputs.DEV_URL }}
+      TEST_URL: ${{ steps.set_outputs.outputs.TEST_URL }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -38,22 +38,24 @@ jobs:
 
       - id: deploy-stack
         name: Deploy stack
-        run: cd cdk && DEV_REGION=eu-central-1 DEV_ACCOUNT=815510839581 yarn cdk deploy HelloConstructsStack-dev --outputs-file ./cdk-outputs.json --require-approval never
+        run: cd cdk && TEST_REGION=eu-central-1 TEST_ACCOUNT=815510839581 yarn cdk deploy HelloConstructsStack-test --outputs-file ./cdk-outputs.json --require-approval never
   
       - name: Edit json
         id: set_outputs
         run:  |
           values=$(jq -r ".[] | values[]" cdk/cdk-outputs.json)
-          echo "DEV_URL<<EOF" >> "${GITHUB_OUTPUT}"
+          echo "TEST_URL<<EOF" >> "${GITHUB_OUTPUT}"
           echo "$values" >> "${GITHUB_OUTPUT}"
           echo "EOF" >> "${GITHUB_OUTPUT}"
 
   deploy_prod_stack:
     environment:
       name: production
-      url: https://bbc.co.uk
-    needs: deploy_dev_stack
-    runs-on: ubuntu-latest
+      url: ${{ steps.set_outputs.outputs.PROD_URL }}
+    needs: deploy_test_stack
+    runs-on: ubuntu-latest    
+    outputs:
+      PROD_URL: ${{ steps.set_outputs.outputs.PROD_URL }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -82,3 +84,11 @@ jobs:
       - id: deploy-stack
         name: Deploy stack
         run: cd cdk && BLUE_REGION=eu-central-1 BLUE_ACCOUNT=580240676696 yarn cdk deploy HelloConstructsStack-blue --require-approval never
+      
+      - name: Edit json
+        id: set_outputs
+        run:  |
+          values=$(jq -r ".[] | values[]" cdk/cdk-outputs.json)
+          echo "PROD_URL<<EOF" >> "${GITHUB_OUTPUT}"
+          echo "$values" >> "${GITHUB_OUTPUT}"
+          echo "EOF" >> "${GITHUB_OUTPUT}"

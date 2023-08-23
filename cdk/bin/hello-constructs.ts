@@ -13,6 +13,13 @@ new HelloConstructsStack(app, 'HelloConstructsStack-dev', {
   }
 });
 
+new HelloConstructsStack(app, 'HelloConstructsStack-test', {
+  env: {
+    account: process.env.TEST_ACCOUNT,
+    region: process.env.TEST_REGION
+  }
+});
+
 new HelloConstructsStack(app, 'HelloConstructsStack-blue', {
    env: {
     account: process.env.BLUE_ACCOUNT,
