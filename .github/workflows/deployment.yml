@@ -43,7 +43,7 @@ jobs:
       - name: Edit json
         id: set_outputs
         run:  |
-          values=$(jq -r ".[] | [values[]]" cdk/cdk-outputs.json)
+          values=$(jq -r ".[] | values[]" cdk/cdk-outputs.json)
           echo "DEV_URL<<EOF" >> "${GITHUB_OUTPUT}"
           echo "$values" >> "${GITHUB_OUTPUT}"
           echo "EOF" >> "${GITHUB_OUTPUT}"
