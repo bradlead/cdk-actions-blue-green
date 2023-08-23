@@ -83,8 +83,8 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: 'arn:aws:iam::580240676696:role/GitHubActionsDeploymentRole'
-          aws-region: 'eu-central-1'
+          role-to-assume: 'arn:aws:iam::${{ secrets.PROD_ACCOUNT }}:role/GitHubActionsDeploymentRole'
+          aws-region: ${{ secrets.PROD_REGION }}
 
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
@@ -113,8 +113,8 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: 'arn:aws:iam::580240676696:role/GitHubActionsDeploymentRole'
-          aws-region: 'eu-central-1'
+          role-to-assume: 'arn:aws:iam::${{ secrets.PROD_ACCOUNT }}:role/GitHubActionsDeploymentRole'
+          aws-region: ${{ secrets.PROD_REGION }}
 
       - name: Check credentials
         run: aws sts get-caller-identity
@@ -129,7 +129,7 @@ jobs:
 
       - id: deploy-stack
         name: Deploy stack
-        run: cd cdk && REGION=eu-central-1 ACCOUNT=580240676696 yarn cdk deploy --outputs-file ./cdk-outputs.json --require-approval never
+        run: cd cdk && REGION=${{ secrets.PROD_REGION }} ACCOUNT=${{ secrets.PROD_ACCOUNT }} yarn cdk deploy --outputs-file ./cdk-outputs.json --require-approval never
       
       - name: Edit json
         id: set_outputs

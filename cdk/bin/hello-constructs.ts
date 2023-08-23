@@ -22,14 +22,14 @@ new HelloConstructsStack(app, 'HelloConstructsStack-test', {
 
 new HelloConstructsStack(app, 'HelloConstructsStack-blue', {
    env: {
-    account: process.env.BLUE_ACCOUNT,
-    region: process.env.BLUE_REGION
+    account: process.env.PROD_ACCOUNT,
+    region: process.env.PROD_REGION
    }
 });
 
 new HelloConstructsStack(app, 'HelloConstructsStack-green', {
    env: {
-    account: process.env.GREEN_ACCOUNT,
-    region: process.env.GREEN_REGION
+    account: process.env.PROD_ACCOUNT,
+    region: process.env.PROD_REGION
    }
 });
