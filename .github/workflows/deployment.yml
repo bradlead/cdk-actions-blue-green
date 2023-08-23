@@ -43,9 +43,8 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          test_account: ${{ secrets.TEST_ACCOUNT }}
           role-to-assume: 'arn:aws:iam::${{ secrets.TEST_ACCOUNT }}:role/github-actions-deployment-role'
-          aws-region: 'eu-central-1'
+          aws-region: ${{ secrets.TEST_REGION }}
 
       - name: Check credentials
         run: aws sts get-caller-identity
@@ -60,7 +59,7 @@ jobs:
 
       - id: deploy-stack
         name: Deploy stack
-        run: cd cdk && REGION=eu-central-1 ACCOUNT=815510839581 yarn cdk deploy --outputs-file ./cdk-outputs.json --require-approval never
+        run: cd cdk && REGION=${{ secrets.TEST_REGION }} ACCOUNT=${{ secrets.TEST_ACCOUNT }} yarn cdk deploy --outputs-file ./cdk-outputs.json --require-approval never
   
       - name: Edit json
         id: set_outputs
