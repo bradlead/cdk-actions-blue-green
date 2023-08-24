@@ -5,7 +5,7 @@ import { HelloConstructsStack } from '../lib/hello-constructs-stack';
 
 const app = new cdk.App();
 
-new HelloConstructsStack(app, 'HelloConstructsStack', {
+new HelloConstructsStack(app, 'HelloConstructsStack-new-feature', {
   env: {
     account: process.env.ACCOUNT,
     region: process.env.REGION
